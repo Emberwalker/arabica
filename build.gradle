@@ -1,0 +1,125 @@
+buildscript {
+    ext.junit_jupiter_version = "5.2.0"
+    ext.lombok_version = "1.18.0"
+    ext.assertj_version = "3.10.0"
+    ext.assertj_guava_version = "3.2.0"
+    ext.guava_version = "25.1-jre"
+}
+
+plugins {
+    id "com.jfrog.bintray" version "1.8.4"
+    id "java"
+    id "java-library"
+    id "maven-publish"
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group = "io.drakon"
+version = "0.0.1"
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile "com.google.guava:guava:$guava_version"
+    compile "org.projectlombok:lombok:$lombok_version"
+    testCompile "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version"
+    testCompile "org.assertj:assertj-core:$assertj_version"
+    testCompile "org.assertj:assertj-guava:$assertj_guava_version"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+javadoc {
+    include "io/drakon/arabica/**/*"
+    //options.addBooleanOption("html5", true)
+    options.stylesheetFile = new File(projectDir, "src/main/javadoc/stylesheet.css")
+}
+
+task sourceJar(type: Jar) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = "javadoc"
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourceJar
+    archives javadocJar
+}
+
+// See https://reflectoring.io/guide-publishing-to-bintray-with-gradle/
+// Publish with `./gradlew bintrayUpload -Dbintray.user=<USER> -Dbintray.key=<API_KEY>`
+
+def pomConfig = {
+    licenses {
+        license {
+            name "The ISC License"
+            url "https://opensource.org/licenses/ISC"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id "emberwalker"
+            name "Robert Tully"
+            email "robert.tully@drakon.io"
+        }
+    }
+    scm {
+        url "https://github.com/emberwalker/arabica"
+    }
+}
+
+publishing {
+    publications {
+        mavenPublication(MavenPublication) {
+            from components.java
+            artifact sourceJar {
+                classifier "sources"
+            }
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+            groupId "io.drakon"
+            artifactId "arabica"
+            version project.version
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'Flavourful utilities for Java.')
+                root.appendNode('name', 'Arabica')
+                root.appendNode('url', 'https://github.com/emberwalker/arabica')
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintray {
+    user = System.getProperty("bintray.user")
+    key = System.getProperty("bintray.key")
+    publications = ['mavenPublication']
+    publish = true
+
+    pkg {
+        repo = 'mvn'
+        name = 'arabica'
+        licenses = ['ISC']
+        vcsUrl = 'https://github.com/emberwalker/arabica.git'
+
+        version {
+            name = project.version
+            desc = project.version
+            released = new Date()
+        }
+    }
+}

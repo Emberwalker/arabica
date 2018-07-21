@@ -1,0 +1,2 @@
+rootProject.name = 'arabica'
+enableFeaturePreview('STABLE_PUBLISHING')
