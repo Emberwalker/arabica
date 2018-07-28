@@ -5,18 +5,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import lombok.experimental.UtilityClass;
+import org.apiguardian.api.API;
 
 /**
  * Helpers for working with Sets.
  */
 @UtilityClass
+@API(status = API.Status.STABLE)
 public class Sets {
 
     /**
      * Converts a given array of items into a new {@link Set}.
      *
      * @param items The items to add to the set.
-     * @param <T> The type of item in the set.
+     * @param <T>   The type of item in the set.
      * @return A {@link Set} of items.
      */
     @SafeVarargs
@@ -28,7 +30,7 @@ public class Sets {
      * Creates a new {@link Set} as the union of other {@link Set} values.
      *
      * @param sets The sets to union.
-     * @param <T> The type within the sets.
+     * @param <T>  The type within the sets.
      * @return The union of all provided sets.
      */
     @SafeVarargs
@@ -43,8 +45,8 @@ public class Sets {
     /**
      * Creates a new {@link Set} with the intersection (common values) of two {@link Set} values.
      *
-     * @param a The first set.
-     * @param b The second set.
+     * @param a   The first set.
+     * @param b   The second set.
      * @param <T> The type contained in the sets.
      * @return The intersection of both sets.
      */
@@ -57,8 +59,8 @@ public class Sets {
     /**
      * Creates a new {@link Set} with the values forming a symmetric difference between two {@link Set} values.
      *
-     * @param a The first set.
-     * @param b The second set.
+     * @param a   The first set.
+     * @param b   The second set.
      * @param <T> The type contained in the sets.
      * @return The symmetric difference of both sets.
      */

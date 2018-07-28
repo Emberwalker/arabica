@@ -6,11 +6,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
+// Tests for Exceptions, MaybeThrowsFunction and MaybeThrowsProducer
 class ExceptionsTest {
 
     @Test
-    void smokeTest() {
+    void smokeTestProducer() {
         assertThatCode(() -> Exceptions.maybeThrows(() -> "smoke")).doesNotThrowAnyException();
+    }
+
+    @Test
+    void smokeTestFunction() {
+        assertThatCode(() -> Exceptions.<String, String>maybeThrows(it -> "smoke")).doesNotThrowAnyException();
     }
 
     @Test
@@ -95,6 +101,26 @@ class ExceptionsTest {
     @Test
     void testOrElseProducerException() {
         assertThat(Exceptions.maybeThrows(ExceptionsTest::throwException).orElse(() -> true)).isTrue();
+    }
+
+    @Test
+    void testFnOrElseValueNoException() {
+        assertThat(Exceptions.maybeThrows(it -> "pass").orElse("fail").apply(null)).isEqualTo("pass");
+    }
+
+    @Test
+    void testFnOrElseValueException() {
+        assertThat(Exceptions.maybeThrows(it -> throwException()).orElse(true).apply(null)).isTrue();
+    }
+
+    @Test
+    void testFnOrElseProducerNoException() {
+        assertThat(Exceptions.maybeThrows(it -> "pass").orElse(() -> "fail").apply(null)).isEqualTo("pass");
+    }
+
+    @Test
+    void testFnOrElseProducerException() {
+        assertThat(Exceptions.maybeThrows(it -> throwException()).orElse(() -> true).apply(null)).isTrue();
     }
 
     @Data

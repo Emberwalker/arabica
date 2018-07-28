@@ -5,12 +5,13 @@ import org.apiguardian.api.API;
 /**
  * Functional interface defining a callable which may produce a value but may throw exceptions.
  *
+ * @param <T> The type of the callable input.
  * @param <R> The type returned from the callable.
  */
 @FunctionalInterface
 @API(status = API.Status.STABLE)
-public interface ThrowableCallable<R> {
+public interface ThrowableFunction<T, R> {
 
-    R apply() throws Throwable;
+    R apply(T input) throws Throwable;
 
 }
