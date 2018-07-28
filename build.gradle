@@ -17,7 +17,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group = "io.drakon"
-version = "0.0.1"
+version = "0.0.2"
 
 repositories {
     jcenter()
@@ -105,8 +105,8 @@ publishing {
 }
 
 bintray {
-    user = System.getProperty("bintray.user")
-    key = System.getProperty("bintray.key")
+    user = System.getProperty("bintray_user")
+    key = System.getProperty("bintray_key")
     publications = ['mavenPublication']
     publish = true
 
